@@ -9,6 +9,7 @@ public class UIManager : SingletonObject<UIManager>
 
     private Transform _root;
     private Dictionary<string, Transform> _layerDic;
+    private Camera _uiCamera;
 
     public UIManager()
     {
@@ -16,6 +17,29 @@ public class UIManager : SingletonObject<UIManager>
         _uiConfigController = new UIConfigController();
         _root = GameObject.Find("UIRoot").transform;
         _layerDic = new Dictionary<string, Transform>();
+
+       
+    }
+
+    public Camera UICamera
+    {
+        get
+        {
+            if (null == _uiCamera)
+            {
+                Canvas canvas = GameObject.Find("UIRoot").GetComponent<Canvas>();
+                if (canvas.renderMode == RenderMode.ScreenSpaceCamera
+                    || canvas.renderMode == RenderMode.WorldSpace)
+                {
+                    _uiCamera = canvas.worldCamera;
+                }
+                else if (canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+                {
+                    _uiCamera = null;
+                }
+            }
+            return _uiCamera;
+        }
     }
 
     public void Update()

@@ -3,11 +3,13 @@ using UnityEngine;
 
 public class CardData
 {
+    public int _layer;
     private int _row;
     private int _col;
     private int _tableId;
-    public CardData(int row, int col)
+    public CardData(int layer, int row, int col)
     {
+        _layer = layer;
         _row = row;
         _col = col;
     }
@@ -54,11 +56,11 @@ public class CardLayerData
     private Dictionary<int, CardData> _cardDic = new Dictionary<int, CardData>();
     private List<int> _keyList = new List<int>();
 
-    public CardLayerData(CardLayerType layerType, int leyer)
+    public CardLayerData(CardLayerType layerType, int layer)
     {
         _cardLayerType = layerType;
-        _layer = leyer;
-        CardCreate();
+        _layer = layer;
+        CardCreate(_layer);
     }
 
     public int Layer
@@ -71,7 +73,7 @@ public class CardLayerData
         get { return _cardLayerType; } 
     }
 
-    private void CardCreate()
+    private void CardCreate(int layer)
     {
         CardLayoutController.CardLayerRowCol(CardLayerType, ref _row, ref _col);
 
@@ -79,13 +81,13 @@ public class CardLayerData
         {
             for (int j = 0; j < _col; ++j)
             {
-                CreateItem(i, j);
+                CreateItem(layer, i, j);
             }
         }
     }
 
     private int randomMax = 1000;
-    private void CreateItem(int row, int col)
+    private void CreateItem(int layer, int row, int col)
     {
         // 66.6% 的概率生成数据
         int value = Random.Range(0, randomMax) % 3;
@@ -94,7 +96,7 @@ public class CardLayerData
             return;
         }
 
-        CardData cardData = new CardData(row, col);
+        CardData cardData = new CardData(layer, row, col);
         int index = RowColToIndex(row, col);
         _cardDic[index] = cardData;
         _keyList.Add(index);

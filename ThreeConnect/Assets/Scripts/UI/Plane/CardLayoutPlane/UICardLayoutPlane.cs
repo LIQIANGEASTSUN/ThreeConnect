@@ -6,6 +6,7 @@ public class UICardLayoutPlane : UIBasePlane
 {
     private UICardLayoutView _view;
     private UICardLayoutModel _cardLayoutModel;
+    private CardSlotController _cardSlotController;
 
     public override void Init(UIPlaneType type)
     {
@@ -25,6 +26,12 @@ public class UICardLayoutPlane : UIBasePlane
         CreateCard();
     }
 
+    public override void Update()
+    {
+        base.Update();
+        _cardSlotController.Update();
+    }
+
     private void CreateCard()
     {
         _view.CreateCard();
@@ -34,12 +41,24 @@ public class UICardLayoutPlane : UIBasePlane
     {
         base.Close();
         UnRegisterEvent();
+        _cardSlotController.Release();
     }
 
     private void ReBuildCardLayout()
     {
         _cardLayoutModel.Create();
         CreateCard();
+    }
+
+    public CardSlotController CardFlyController
+    {
+        get {
+            if (null == _cardSlotController)
+            {
+                _cardSlotController = new CardSlotController();
+            }
+            return _cardSlotController;
+        }
     }
 
     private void RegisterEvent()

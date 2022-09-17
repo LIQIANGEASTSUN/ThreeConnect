@@ -24,11 +24,13 @@ public class UIMainPlane : UIBasePlane
 
     public void RestartOnClick()
     {
+        _mainView.ShowRestart(false);
         GameNotifycation.GetInstance().Notify(ENUM_MSG_TYPE.MSG_REBUILD_CARD_LAYOUT);
     }
 
     public void StartOnClick()
     {
+        _mainView.ShowStart(false);
         UIManager.GetInstance().Open(UIPlaneType.CardLayout, null);
     }
 

@@ -19,6 +19,7 @@ public class UICardLayoutView : IUIView
         _cardLayoutPlane = controller as UICardLayoutPlane;
 
         _cardGroupView = new CardGroupView(_tr);
+        _cardLayoutPlane.CardFlyController.SetTr(_tr);
     }
 
     public void SetModel(UICardLayoutModel model)

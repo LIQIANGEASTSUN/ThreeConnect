@@ -95,6 +95,24 @@ public class CardLayoutController
         return data;
     }
 
+    public void Remove(int layer, int row, int col)
+    {
+        CardLayerData layerData;
+        if (_layerDic.TryGetValue(layer, out layerData))
+        {
+            layerData.Remove(row, col);
+        }
+    }
+
+    public void Remove(int layer, int index)
+    {
+        CardLayerData layerData;
+        if (_layerDic.TryGetValue(layer, out layerData))
+        {
+            layerData.Remove(index);
+        }
+    }
+
     public int LayerCount
     {
         get { return _layerCount; }

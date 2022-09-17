@@ -21,7 +21,7 @@ public class CardGroupView
         _groupTr = _tr.Find("Group");
         _group_5_8 = _groupTr.Find("CardGroup5_8");
         _group_5_7 = _groupTr.Find("CardGroup5_7");
-        _cardClone = _groupTr.Find("Card");
+        _cardClone = _tr.Find("Card");
     }
 
     public void CreateCard(UICardLayoutModel model)
@@ -37,7 +37,8 @@ public class CardGroupView
         {
             CardLayerData layerData = kv.Value;
             Transform layerTr = CreateLayerTr(layerData.CardLayerType);
-            CardLayerView cardLayerView = new CardLayerView(layerTr, cardLayoutController, layerData.Layer);
+            CardLayerView cardLayerView = new CardLayerView(layerTr, _cardClone, cardLayoutController, layerData.Layer);
+            _layerList.Add(cardLayerView);
         }
     }
 
@@ -59,6 +60,7 @@ public class CardGroupView
         layerTr.localRotation = Quaternion.identity;
         layerTr.localPosition = Vector3.zero;
         layerTr.localScale = Vector3.one;
+        layerTr.gameObject.SetActive(true);
         return layerTr;
     }
 

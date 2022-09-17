@@ -30,4 +30,14 @@ public class UIMainView : IUIView
         _startBtn.onClick.AddListener(UIMainPlane.StartOnClick);
     }
 
+    public void ShowRestart(bool value)
+    {
+        _restarBtn.gameObject.SetActive(value);
+    }
+
+    public void ShowStart(bool value)
+    {
+        _startBtn.gameObject.SetActive(value);
+    }
+
 }
