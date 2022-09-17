@@ -58,49 +58,20 @@ public class CardSlotController
             if (leftTableId == tableId)
             {
                 count++;
-                if (i == _cardList.Count - 1 && count == GameConstast.MergeMinCount)
-                {
-                    CalculateRemove(i, leftTableId, removeList);
-                    count = 0;
-                }
             }
             else
             {
-                if (count >= GameConstast.MergeMinCount)
-                {
-                    CalculateRemove(i - 1, leftTableId, removeList);
-                }
                 count = 1;
                 leftTableId = tableId;
             }
-        }
 
-        //int count = 0;
-        //int leftTableId = -1;
-        //List<int> removeList = new List<int>();
-        //for (int i = 0; i < _cardList.Count; ++i)
-        //{
-        //    CardSlotItem card = _cardList[i];
-        //    int tableId = card._cardItem.CardData.TableId;
-        //    if (leftTableId == tableId)
-        //    {
-        //        count++;
-        //        if (i == _cardList.Count - 1 && count == GameConstast.MergeMinCount)
-        //        {
-        //            CalculateRemove(i, leftTableId, removeList);
-        //            count = 0;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        if (count >= GameConstast.MergeMinCount)
-        //        {
-        //            CalculateRemove(i -1, leftTableId, removeList);
-        //        }
-        //        count = 1;
-        //        leftTableId = tableId;
-        //    }
-        //}
+            if (count == GameConstast.MergeMinCount)
+            {
+                CalculateRemove(i, leftTableId, removeList);
+                count = 0;
+                leftTableId = -1;
+            }
+        }
 
         _needMove = removeList.Count > 0;
         for (int i = removeList.Count - 1; i >= 0; --i)
