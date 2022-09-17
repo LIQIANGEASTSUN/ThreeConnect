@@ -2,8 +2,10 @@
 {
     MSG_REBUILD_CARD_LAYOUT,           // 卡牌重新布局
 
+    MSG_CARD_ONCLICK,                  // 卡牌点击
+
     MSG_CARD_FLY,                      // 卡牌飞
 
-    MSG_CARD_ENABLE_FLY,               // 卡牌还能不能飞了
+    MSG_CARD_IS_IN_TOP_LAYER,          // 卡牌是否在顶层
 
 }

@@ -58,6 +58,14 @@ public class CardLayerView
         _cardLayoutDataController.Remove(layer, row, col);
     }
 
+    public CardItem GetCardItem(int row, int col)
+    {
+        int index = RowColToIndex(row, col);
+        CardItem cardItem = null;
+        _cardDic.TryGetValue(index, out cardItem);
+        return cardItem;
+    }
+
     public void Release()
     {
         GameObject.Destroy(_tr.gameObject);

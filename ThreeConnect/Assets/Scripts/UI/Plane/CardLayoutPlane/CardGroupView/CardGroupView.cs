@@ -1,6 +1,6 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class CardGroupView
 {
@@ -66,7 +66,7 @@ public class CardGroupView
         return layerTr;
     }
 
-    private void CardFly(CardData data, Vector2 position)
+    private void CardFly(CardData data)
     {
         CardLayerView cardLayerView = null;
         if (!_layerDic.TryGetValue(data._layer, out cardLayerView))
@@ -76,6 +76,51 @@ public class CardGroupView
         cardLayerView.Remove(data._layer, data.Row, data.Col);
     }
 
+    private void CardIsInTopLayer(CardData cardData, Action<bool> callBack)
+    {
+        foreach(var kv in _layerDic)
+        {
+            CardLayerView cardLayerView = kv.Value;
+            bool result = CardIsInTopLayer(cardData, cardLayerView);
+            if (!result)
+            {
+                callBack.Invoke(result);
+                return;
+            }
+        }
+        callBack.Invoke(true);
+    }
+
+    private bool CardIsInTopLayer(CardData cardData, CardLayerView cardLayerView)
+    {
+        CardItem selfItem = _layerDic[cardData._layer].GetCardItem(cardData.Row, cardData.Col);
+
+        int minRow = cardData.Row - 1;
+        int minCol = cardData.Col - 1;
+        int maxRow = cardData.Row + 1;
+        int maxCol = cardData.Col + 1;
+
+        for (int i = minRow; i <= maxRow; i++)
+        {
+            for (int j = minCol; j <= maxCol; j++)
+            {
+                CardItem cardItem = cardLayerView.GetCardItem(i, j);
+                if (null == cardItem)
+                {
+                    continue;
+                }
+                if (AABB2D.IsIntersect(selfItem.AABB2D, cardItem.AABB2D))
+                {
+                    if (cardItem.CardData._layer > selfItem.CardData._layer)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
     public void Close()
     {
         UnRegisterEvent();
@@ -83,12 +128,14 @@ public class CardGroupView
 
     private void RegisterEvent()
     {
-        GameNotifycation.GetInstance().AddEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
+        GameNotifycation.GetInstance().AddEventListener<CardData>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
+        GameNotifycation.GetInstance().AddEventListener<CardData, Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_IS_IN_TOP_LAYER, CardIsInTopLayer);
     }
 
     private void UnRegisterEvent()
     {
-        GameNotifycation.GetInstance().RemoveEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
+        GameNotifycation.GetInstance().RemoveEventListener<CardData>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
+        GameNotifycation.GetInstance().RemoveEventListener<CardData, Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_IS_IN_TOP_LAYER, CardIsInTopLayer);
     }
 
 }

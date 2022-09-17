@@ -11,6 +11,7 @@ public class CardSlotController
     private RectTransform _cardRectTransform;
     private List<CardSlotItem> _cardList = new List<CardSlotItem> ();
     private bool _needMove = false;
+    private bool _cardIsInTopLayer = false;
 
     public CardSlotController()
     {
@@ -131,8 +132,20 @@ public class CardSlotController
         _cardRectTransform = _cardClone.GetComponent<RectTransform>();
     }
 
-    private void CardFly(CardData cardData, Vector2 screenPoint)
+    private void CardClick(CardData cardData, Vector2 screenPoint)
     {
+        if (_cardList.Count >= GameConstast.SlotMaxCount)
+        {
+            return;
+        }
+        GameNotifycation.GetInstance().Notify<CardData, Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_IS_IN_TOP_LAYER, cardData, CardIsInTopLayer);
+        if (!_cardIsInTopLayer)
+        {
+            return;
+        }
+
+        GameNotifycation.GetInstance().Notify<CardData>(ENUM_MSG_TYPE.MSG_CARD_FLY, cardData);
+
         _needMove = true;
 
         GameObject go = GameObject.Instantiate(_cardClone.gameObject);
@@ -182,22 +195,19 @@ public class CardSlotController
         return new Vector2(x, 0);
     }
 
-    private void CardEnableFly(Action<bool> callBack)
+    private void CardIsInTopLayer(bool result)
     {
-        bool enable = _cardList.Count < GameConstast.SlotMaxCount;
-        callBack.Invoke(enable);
+        _cardIsInTopLayer = result;
     }
 
     private void RegisterEvent()
     {
-        GameNotifycation.GetInstance().AddEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
-        GameNotifycation.GetInstance().AddEventListener<Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_ENABLE_FLY, CardEnableFly);
+        GameNotifycation.GetInstance().AddEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_ONCLICK, CardClick);
     }
 
     private void UnRegisterEvent()
     {
-        GameNotifycation.GetInstance().RemoveEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
-        GameNotifycation.GetInstance().RemoveEventListener<Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_ENABLE_FLY, CardEnableFly);
+        GameNotifycation.GetInstance().RemoveEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_ONCLICK, CardClick);
     }
 }
 

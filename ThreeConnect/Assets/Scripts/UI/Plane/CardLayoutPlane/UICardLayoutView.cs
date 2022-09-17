@@ -37,4 +37,10 @@ public class UICardLayoutView : IUIView
         _cardGroupView.Close();
     }
 
+    public CardGroupView CardGroupView
+    {
+        get { return _cardGroupView; }
+    }
+
+
 }
