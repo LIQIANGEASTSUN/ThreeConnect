@@ -32,4 +32,9 @@ public class UICardLayoutView : IUIView
         _cardGroupView.CreateCard(_cardLayoutModel);
     }
 
+    public void Close()
+    {
+        _cardGroupView.Close();
+    }
+
 }

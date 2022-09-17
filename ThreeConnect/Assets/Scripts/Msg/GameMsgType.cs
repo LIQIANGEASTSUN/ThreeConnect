@@ -4,4 +4,6 @@
 
     MSG_CARD_FLY,                      // 卡牌飞
 
+    MSG_CARD_ENABLE_FLY,               // 卡牌还能不能飞了
+
 }

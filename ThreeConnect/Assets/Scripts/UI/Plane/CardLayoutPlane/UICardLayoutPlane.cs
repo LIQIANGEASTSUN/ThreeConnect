@@ -41,6 +41,7 @@ public class UICardLayoutPlane : UIBasePlane
     {
         base.Close();
         UnRegisterEvent();
+        _view.Close();
         _cardSlotController.Release();
     }
 

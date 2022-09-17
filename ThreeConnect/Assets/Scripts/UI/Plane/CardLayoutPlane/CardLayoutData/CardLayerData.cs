@@ -75,7 +75,7 @@ public class CardLayerData
 
     private void CardCreate(int layer)
     {
-        CardLayoutController.CardLayerRowCol(CardLayerType, ref _row, ref _col);
+        CardLayoutDataController.CardLayerRowCol(CardLayerType, ref _row, ref _col);
 
         for (int i = 0; i < _row; ++i)
         {
@@ -153,4 +153,13 @@ public class CardLayerData
         }
     }
 
+    public int Row
+    {
+        get { return _row; }
+    }
+
+    public int Col
+    { 
+        get { return _col; } 
+    }
 }

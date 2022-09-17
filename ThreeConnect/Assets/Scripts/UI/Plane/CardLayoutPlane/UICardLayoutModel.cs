@@ -5,11 +5,11 @@ using UnityEngine;
 public class UICardLayoutModel : IUIModel
 {
     private IUIDataBase _data;
-    private CardLayoutController _controller;
+    private CardLayoutDataController _controller;
 
     public UICardLayoutModel()
     {
-        _controller = new CardLayoutController();
+        _controller = new CardLayoutDataController();
     }
 
     public void Open(IUIDataBase data)
@@ -24,7 +24,7 @@ public class UICardLayoutModel : IUIModel
         _controller.ReLayout();
     }
 
-    public CardLayoutController CardLayoutController
+    public CardLayoutDataController CardLayoutDataController
     {
         get { return _controller; }
     }

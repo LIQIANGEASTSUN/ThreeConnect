@@ -12,7 +12,7 @@ public class CardGroupView
     private Transform _group_5_7;
     private Transform _cardClone;
 
-    private List<CardLayerView> _layerList = new List<CardLayerView>();
+    private Dictionary<int, CardLayerView> _layerDic = new Dictionary<int, CardLayerView>();
 
     public CardGroupView(Transform tr)
     {
@@ -22,23 +22,25 @@ public class CardGroupView
         _group_5_8 = _groupTr.Find("CardGroup5_8");
         _group_5_7 = _groupTr.Find("CardGroup5_7");
         _cardClone = _tr.Find("Card");
+
+        RegisterEvent();
     }
 
     public void CreateCard(UICardLayoutModel model)
     {
-        foreach(var layer in _layerList)
+        foreach(var kv in _layerDic)
         {
-            layer.Release();
+            kv.Value.Release();
         }
-        _layerList.Clear();
+        _layerDic.Clear();
 
-        CardLayoutController cardLayoutController = model.CardLayoutController;
-        foreach(var kv in cardLayoutController.LayerDic)
+        CardLayoutDataController cardLayoutDataController = model.CardLayoutDataController;
+        foreach(var kv in cardLayoutDataController.LayerDic)
         {
             CardLayerData layerData = kv.Value;
             Transform layerTr = CreateLayerTr(layerData.CardLayerType);
-            CardLayerView cardLayerView = new CardLayerView(layerTr, _cardClone, cardLayoutController, layerData.Layer);
-            _layerList.Add(cardLayerView);
+            CardLayerView cardLayerView = new CardLayerView(layerTr, _cardClone, cardLayoutDataController, layerData.Layer);
+            _layerDic[kv.Key] = cardLayerView;
         }
     }
 
@@ -62,6 +64,31 @@ public class CardGroupView
         layerTr.localScale = Vector3.one;
         layerTr.gameObject.SetActive(true);
         return layerTr;
+    }
+
+    private void CardFly(CardData data, Vector2 position)
+    {
+        CardLayerView cardLayerView = null;
+        if (!_layerDic.TryGetValue(data._layer, out cardLayerView))
+        {
+            return;
+        }
+        cardLayerView.Remove(data._layer, data.Row, data.Col);
+    }
+
+    public void Close()
+    {
+        UnRegisterEvent();
+    }
+
+    private void RegisterEvent()
+    {
+        GameNotifycation.GetInstance().AddEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
+    }
+
+    private void UnRegisterEvent()
+    {
+        GameNotifycation.GetInstance().RemoveEventListener<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, CardFly);
     }
 
 }

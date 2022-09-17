@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using TMPro;
-
+using System;
 public enum CardType
 {
     /// <summary>
@@ -20,6 +20,8 @@ public class CardItem
     private TMP_Text _text;
     private CardData _cardData;
     private CardType _cardType;
+    private bool _cardEnableFly = false;
+
     public CardItem(Transform itemTr, CardData cardData, CardType cardType)
     {
         _tr = itemTr;
@@ -61,9 +63,18 @@ public class CardItem
 
     private void OnClick()
     {
-        Debug.LogError("OnClick:" + _cardData.Row + "   " + _cardData.Col);
+        if (!_cardEnableFly)
+        {
+            return;
+        }
+        GameNotifycation.GetInstance().Notify<Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_ENABLE_FLY, CardEnableFly);
         Vector2 screenPoint = PositionConvert.UIPointToScreenPoint(_tr.position);
         GameNotifycation.GetInstance().Notify<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, _cardData, screenPoint);
+    }
+
+    private void CardEnableFly(bool enable)
+    {
+        _cardEnableFly = enable;
     }
 
     public CardData CardData

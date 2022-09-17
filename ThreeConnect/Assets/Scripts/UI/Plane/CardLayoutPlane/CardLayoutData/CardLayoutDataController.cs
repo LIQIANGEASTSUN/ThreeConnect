@@ -2,12 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CardLayoutController
+public class CardLayoutDataController
 {
     private Dictionary<int, CardLayerData> _layerDic = new Dictionary<int, CardLayerData>();
     private int _layerCount = 0;
 
-    public CardLayoutController()
+    public CardLayoutDataController()
     {
 
     }
