@@ -22,14 +22,14 @@ public class UIMainPlane : UIBasePlane
         base.Open(data);
     }
 
-    public void CloseOnClick()
+    public void RestartOnClick()
     {
-        CloseSelf();
+        GameNotifycation.GetInstance().Notify(ENUM_MSG_TYPE.MSG_REBUILD_CARD_LAYOUT);
     }
 
-    public void ShopOnClick()
+    public void StartOnClick()
     {
-        //UIManager.GetInstance().Open(UIPlaneType.Shop, null);
+        UIManager.GetInstance().Open(UIPlaneType.CardLayout, null);
     }
 
 }

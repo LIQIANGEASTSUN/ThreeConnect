@@ -47,16 +47,23 @@ public enum CardLayerType
 
 public class CardLayerData
 {
+    private int _layer;
     private CardLayerType _cardLayerType;
     private int _row;
     private int _col;
     private Dictionary<int, CardData> _cardDic = new Dictionary<int, CardData>();
     private List<int> _keyList = new List<int>();
 
-    public CardLayerData(CardLayerType layerType)
+    public CardLayerData(CardLayerType layerType, int leyer)
     {
         _cardLayerType = layerType;
+        _layer = leyer;
         CardCreate();
+    }
+
+    public int Layer
+    {
+        get { return _layer; }
     }
 
     public CardLayerType CardLayerType 

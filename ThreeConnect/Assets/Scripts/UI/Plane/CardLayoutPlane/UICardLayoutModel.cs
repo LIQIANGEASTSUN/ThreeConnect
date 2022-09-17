@@ -15,11 +15,19 @@ public class UICardLayoutModel : IUIModel
     public void Open(IUIDataBase data)
     {
         _data = data;
+
+        Create();
     }
 
     public void Create()
     {
         _controller.ReLayout();
     }
+
+    public CardLayoutController CardLayoutController
+    {
+        get { return _controller; }
+    }
+
 
 }

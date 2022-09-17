@@ -12,8 +12,8 @@ public class UIMainView : IUIView
     private IUIController _uiController;
     private UIMainPlane UIMainPlane;
 
-    private Button _closeBtn;
-    private Button _shopBtn;
+    private Button _restarBtn;
+    private Button _startBtn;
 
     public void Open(Transform tr, IUIController controller)
     {
@@ -21,13 +21,13 @@ public class UIMainView : IUIView
         _uiController = controller;
         UIMainPlane = controller as UIMainPlane;
 
-        _closeBtn = _tr.Find("CloseBtn").GetComponent<Button>();
-        _closeBtn.onClick.RemoveAllListeners();
-        _closeBtn.onClick.AddListener(UIMainPlane.CloseOnClick);
+        _restarBtn = _tr.Find("RestartBtn").GetComponent<Button>();
+        _restarBtn.onClick.RemoveAllListeners();
+        _restarBtn.onClick.AddListener(UIMainPlane.RestartOnClick);
 
-        _shopBtn = _tr.Find("ShopBtn").GetComponent<Button>();
-        _shopBtn.onClick.RemoveAllListeners();
-        _shopBtn.onClick.AddListener(UIMainPlane.ShopOnClick);
+        _startBtn = _tr.Find("StartBtn").GetComponent<Button>();
+        _startBtn.onClick.RemoveAllListeners();
+        _startBtn.onClick.AddListener(UIMainPlane.StartOnClick);
     }
 
 }

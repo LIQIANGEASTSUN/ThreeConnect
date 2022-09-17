@@ -24,15 +24,12 @@ public class CardLayoutController
             ++layer;
             layer %= 2;
 
-            CardLayerData cardLayerData = new CardLayerData(cardLayer);
+            CardLayerData cardLayerData = new CardLayerData(cardLayer, i);
             _layerDic[i] = cardLayerData;
         }
 
-        while (TotalCard() % 3 != 0)
-        {
-            int key = Random.Range(0, 1000) % _layerCount;
-            _layerDic[key].RandomRemove();
-        }
+        BeDividedExactlyBy3();
+        CardAssignment();
     }
 
     private int TotalCard()
@@ -45,9 +42,57 @@ public class CardLayoutController
         return count;
     }
 
+    // 将数据削减为能被3整除
+    private void BeDividedExactlyBy3()
+    {
+        while (TotalCard() % 3 != 0)
+        {
+            int key = Random.Range(0, 1000) % _layerCount;
+            _layerDic[key].RandomRemove();
+        }
+    }
+
+    // Card 赋值
+    private void CardAssignment()
+    {
+        List<int> tableList = new List<int>();
+        int count = TotalCard();
+        count /= 3;
+        for (int i = 0; i < count; ++i)
+        {
+            int tableId = ((char)'A') + i % 8;
+            tableList.Add(tableId);
+            tableList.Add(tableId);
+            tableList.Add(tableId);
+        }
+
+        foreach(var kv in _layerDic)
+        {
+            CreateAssignment(tableList, kv.Value);
+        }
+    }
+
+    private void CreateAssignment(List<int> tableList, CardLayerData cardLayerData)
+    {
+        IEnumerable<CardData> ie = cardLayerData.GetData();
+        foreach(var card in ie)
+        {
+            int index = Random.Range(0, 1000) % tableList.Count;
+            card.TableId = tableList[index];
+            tableList.RemoveAt(index);
+        }
+    }
+
     public Dictionary<int, CardLayerData> LayerDic
     {
         get { return _layerDic; }
+    }
+
+    public CardLayerData GetLayerData(int layer)
+    {
+        CardLayerData data = null;
+        LayerDic.TryGetValue(layer, out data);
+        return data;
     }
 
     public int LayerCount

@@ -8,9 +8,9 @@ public class UICardLayoutView : IUIView
     private Transform _tr;
     private IUIController _uiController;
     private UICardLayoutPlane _cardLayoutPlane;
+    private UICardLayoutModel _cardLayoutModel;
 
-    private Button _restarBtn;
-    private Button _startBtn;
+    private CardGroupView _cardGroupView;
 
     public void Open(Transform tr, IUIController controller)
     {
@@ -18,13 +18,17 @@ public class UICardLayoutView : IUIView
         _uiController = controller;
         _cardLayoutPlane = controller as UICardLayoutPlane;
 
-        _restarBtn = _tr.Find("RestartBtn").GetComponent<Button>();
-        _restarBtn.onClick.RemoveAllListeners();
-        _restarBtn.onClick.AddListener(_cardLayoutPlane.RestartOnClick);
+        _cardGroupView = new CardGroupView(_tr);
+    }
 
-        _startBtn = _tr.Find("StartBtn").GetComponent<Button>();
-        _startBtn.onClick.RemoveAllListeners();
-        _startBtn.onClick.AddListener(_cardLayoutPlane.StartOnClick);
+    public void SetModel(UICardLayoutModel model)
+    {
+        _cardLayoutModel = model;
+    }
+
+    public void CreateCard()
+    {
+        _cardGroupView.CreateCard(_cardLayoutModel);
     }
 
 }

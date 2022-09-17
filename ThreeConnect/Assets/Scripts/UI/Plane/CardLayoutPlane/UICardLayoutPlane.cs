@@ -10,7 +10,7 @@ public class UICardLayoutPlane : UIBasePlane
     public override void Init(UIPlaneType type)
     {
         base.Init(type);
-        View = new UIMainView();
+        View = new UICardLayoutView();
         _view = View as UICardLayoutView;
 
         Model = new UICardLayoutModel();
@@ -20,16 +20,36 @@ public class UICardLayoutPlane : UIBasePlane
     public override void Open(IUIDataBase data)
     {
         base.Open(data);
-        _cardLayoutModel.Open(data);
+        RegisterEvent();
+        _view.SetModel(_cardLayoutModel);
+        CreateCard();
     }
 
-    public void RestartOnClick()
+    private void CreateCard()
     {
-
+        _view.CreateCard();
     }
 
-    public void StartOnClick()
+    public override void Close()
     {
-        //UIManager.GetInstance().Open(UIPlaneType.Shop, null);
+        base.Close();
+        UnRegisterEvent();
     }
+
+    private void ReBuildCardLayout()
+    {
+        _cardLayoutModel.Create();
+        CreateCard();
+    }
+
+    private void RegisterEvent()
+    {
+        GameNotifycation.GetInstance().AddEventListener(ENUM_MSG_TYPE.MSG_REBUILD_CARD_LAYOUT, ReBuildCardLayout);
+    }
+
+    private void UnRegisterEvent()
+    {
+        GameNotifycation.GetInstance().RemoveEventListener(ENUM_MSG_TYPE.MSG_REBUILD_CARD_LAYOUT, ReBuildCardLayout);
+    }
+
 }
