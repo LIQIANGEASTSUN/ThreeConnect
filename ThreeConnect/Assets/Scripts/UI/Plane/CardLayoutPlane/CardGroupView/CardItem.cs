@@ -73,7 +73,7 @@ public class CardItem
         Vector2 size = _rectTransform.sizeDelta;
 
         float x = size.x * (_cardData.Col + 0.5f) - _parentRectTransform.sizeDelta.x * 0.5f;
-        float y = size.y * (_cardData.Row + 0.5f) - _parentRectTransform.sizeDelta.y * 0.5f;
+        float y = -1 * size.y * (_cardData.Row + 0.5f) + _parentRectTransform.sizeDelta.y * 0.5f;
 
         Vector2 position = new Vector2(x, y);
         return position;
@@ -90,8 +90,8 @@ public class CardItem
         Vector2 screenPoint = PositionConvert.UIPointToScreenPoint(_tr.position);
         Vector2 localPosition = PositionConvert.ScreenPointToUILocalPoint(_parentRectTransform, screenPoint);
 
-        Vector2 min = localPosition - _rectTransform.sizeDelta * 0.5f;
-        Vector2 max = localPosition + _rectTransform.sizeDelta * 0.5f;
+        Vector2 min = localPosition - _rectTransform.sizeDelta * 0.45f;
+        Vector2 max = localPosition + _rectTransform.sizeDelta * 0.45f;
         _aabb2D = new AABB2D(min, max);
     }
 

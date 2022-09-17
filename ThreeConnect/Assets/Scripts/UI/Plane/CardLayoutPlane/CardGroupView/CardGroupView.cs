@@ -111,6 +111,8 @@ public class CardGroupView
                 }
                 if (AABB2D.IsIntersect(selfItem.AABB2D, cardItem.AABB2D))
                 {
+                    char ch1 = (char)cardItem.CardData.TableId;
+                    char ch2 = (char)selfItem.CardData.TableId;
                     if (cardItem.CardData._layer > selfItem.CardData._layer)
                     {
                         return false;

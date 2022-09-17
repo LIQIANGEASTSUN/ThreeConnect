@@ -219,7 +219,7 @@ public class CardSlotItem
     private Vector2 _moveStartPosition;
     private float _moveTime;
     private int _index;
-    private const float MAX_MOVE_TIME = 2.5f;
+    private const float MAX_MOVE_TIME = 0.5f;
     public CardSlotItem(RectTransform parentRectTransform, CardItem cardItem, Vector2 screenPoint)
     {
         _parentRectTransform = parentRectTransform;
