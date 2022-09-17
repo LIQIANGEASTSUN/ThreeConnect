@@ -21,9 +21,13 @@ public class CardItem
     private CardData _cardData;
     private CardType _cardType;
     private bool _cardEnableFly = false;
+    private int _instanceId;
+
+    private static int _NewInstanceId = 0;
 
     public CardItem(Transform itemTr, CardData cardData, CardType cardType)
     {
+        _instanceId = ++_NewInstanceId;
         _tr = itemTr;
         _cardData = cardData;
         _cardType = cardType;
@@ -63,11 +67,11 @@ public class CardItem
 
     private void OnClick()
     {
+        GameNotifycation.GetInstance().Notify<Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_ENABLE_FLY, CardEnableFly);
         if (!_cardEnableFly)
         {
             return;
         }
-        GameNotifycation.GetInstance().Notify<Action<bool>>(ENUM_MSG_TYPE.MSG_CARD_ENABLE_FLY, CardEnableFly);
         Vector2 screenPoint = PositionConvert.UIPointToScreenPoint(_tr.position);
         GameNotifycation.GetInstance().Notify<CardData, Vector2>(ENUM_MSG_TYPE.MSG_CARD_FLY, _cardData, screenPoint);
     }
@@ -96,6 +100,11 @@ public class CardItem
     {
         get { return _rectTransform.anchoredPosition; }
         set { _rectTransform.anchoredPosition = value; }    
+    }
+
+    public int InstanceId
+    {
+        get { return _instanceId; }
     }
 
     public void Release()

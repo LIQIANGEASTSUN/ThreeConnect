@@ -48,6 +48,7 @@ public class UICardLayoutPlane : UIBasePlane
     private void ReBuildCardLayout()
     {
         _cardLayoutModel.Create();
+        _cardSlotController.Clear();
         CreateCard();
     }
 

@@ -58,28 +58,60 @@ public class CardSlotController
             if (leftTableId == tableId)
             {
                 count++;
-                if (i == _cardList.Count - 1 && count >= GameConstast.MergeMinCount)
+                if (i == _cardList.Count - 1 && count == GameConstast.MergeMinCount)
                 {
-                    CalculateRemove(i, count, removeList);
+                    CalculateRemove(i, leftTableId, removeList);
+                    count = 0;
                 }
             }
             else
             {
                 if (count >= GameConstast.MergeMinCount)
                 {
-                    CalculateRemove(i, count, removeList);
+                    CalculateRemove(i - 1, leftTableId, removeList);
                 }
                 count = 1;
                 leftTableId = tableId;
             }
         }
 
+        //int count = 0;
+        //int leftTableId = -1;
+        //List<int> removeList = new List<int>();
+        //for (int i = 0; i < _cardList.Count; ++i)
+        //{
+        //    CardSlotItem card = _cardList[i];
+        //    int tableId = card._cardItem.CardData.TableId;
+        //    if (leftTableId == tableId)
+        //    {
+        //        count++;
+        //        if (i == _cardList.Count - 1 && count == GameConstast.MergeMinCount)
+        //        {
+        //            CalculateRemove(i, leftTableId, removeList);
+        //            count = 0;
+        //        }
+        //    }
+        //    else
+        //    {
+        //        if (count >= GameConstast.MergeMinCount)
+        //        {
+        //            CalculateRemove(i -1, leftTableId, removeList);
+        //        }
+        //        count = 1;
+        //        leftTableId = tableId;
+        //    }
+        //}
+
         _needMove = removeList.Count > 0;
         for (int i = removeList.Count - 1; i >= 0; --i)
         {
-            int index = removeList[i];
-            _cardList[i].BeMerge();
-            _cardList.RemoveAt(i);
+            int instanceId = removeList[i];
+            CardSlotItem item = _cardList.Find((a) => { return a._cardItem.InstanceId == instanceId; });
+            if (null != item)
+            {
+                item.BeMerge();
+                _cardList.Remove(item);
+            }
         }
         if (_needMove)
         {
@@ -87,25 +119,37 @@ public class CardSlotController
         }
     }
 
-    private void CalculateRemove(int index, int count, List<int> removeList)
+    private void CalculateRemove(int index, int tableId, List<int> removeList)
     {
-        int start = index - count + 1;
-        for (int j = 0; j < count; ++j)
+        for (int i = index; i >= 0; --i)
         {
-            removeList.Add(start + j);
+            CardSlotItem card = _cardList[i];
+            int id  = card._cardItem.CardData.TableId;
+            if (id == tableId)
+            {
+                removeList.Add(card._cardItem.InstanceId);
+            }
+            else
+            {
+                break;
+            }
         }
+    }
+
+    public void Clear()
+    {
+        _needMove = false;
+        foreach (var card in _cardList)
+        {
+            card.Release();
+        }
+        _cardList.Clear();
     }
 
     public void Release()
     {
         UnRegisterEvent();
-
-        _needMove = false;
-        foreach(var card in _cardList)
-        {
-            card.Release();
-        }
-        _cardList.Clear();
+        Clear();
     }
 
     public void SetTr(Transform tr)
@@ -138,21 +182,13 @@ public class CardSlotController
     private int SearchInsertIndex(CardData cardData)
     {
         int insertIndex = _cardList.Count;
-        int count = 0;
         for (int i = 0; i < _cardList.Count; i++)
         {
             CardItem cardItem = _cardList[i]._cardItem;
             if (cardItem.CardData.TableId == cardData.TableId)
             {
-                ++count;
-            }
-            else
-            {
-                count = 1;
-            }
-            if (count >= 2)
-            {
                 insertIndex = i + 1;
+                break;
             }
         }
         insertIndex = Mathf.Clamp(insertIndex, 0, _cardList.Count);
@@ -202,7 +238,7 @@ public class CardSlotItem
     private Vector2 _moveStartPosition;
     private float _moveTime;
     private int _index;
-    private const float MAX_MOVE_TIME = 1;
+    private const float MAX_MOVE_TIME = 2.5f;
     public CardSlotItem(RectTransform parentRectTransform, CardItem cardItem, Vector2 screenPoint)
     {
         _parentRectTransform = parentRectTransform;
@@ -224,7 +260,7 @@ public class CardSlotItem
     public void Move()
     {
         _moveTime += Time.deltaTime;
-        _cardItem.AnchoredPosition = Vector2.Lerp(_moveStartPosition, _position, _moveTime);
+        _cardItem.AnchoredPosition = Vector2.Lerp(_moveStartPosition, _position, _moveTime / MAX_MOVE_TIME);
     }
 
     public bool NeedMove()
